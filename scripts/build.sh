@@ -60,8 +60,8 @@ mkdir -p "$APP_BUNDLE/Contents/Resources/data"
 # Copy Info.plist
 cp "$SWIFT_DIR/Resources/Info.plist" "$APP_BUNDLE/Contents/Info.plist"
 
-# Copy icons
-cp "$SWIFT_DIR/Resources/iconTemplate.tiff" "$APP_BUNDLE/Contents/Resources/iconTemplate.tiff"
+# Copy icons (PDF template icon for menu bar — macOS auto-inverts for dark mode + Globe overlay)
+cp "$SWIFT_DIR/Resources/iconTemplate.pdf" "$APP_BUNDLE/Contents/Resources/iconTemplate.pdf"
 cp "$SWIFT_DIR/Resources/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
 
 # Copy data files
