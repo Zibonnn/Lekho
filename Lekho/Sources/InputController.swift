@@ -385,62 +385,20 @@ class LekhoInputController: IMKInputController {
             }
         }
 
-        // Try 4: Accessibility API fallback (works for Chrome and other apps with broken firstRect)
-        if let axRect = getAccessibilityCursorRect(), isValidCursorRect(axRect) {
-            lastKnownCursorRect = axRect
-            return axRect
-        }
-
-        // Try 5: reuse last known good position (from a previous keystroke or app)
-        if isValidCursorRect(lastKnownCursorRect) {
+        // Try 4: reuse last known good position (from a previous keystroke)
+        if lastKnownCursorRect.size.height >= 1 {
             return lastKnownCursorRect
         }
 
-        // Try 6: position near the frontmost window
-        let fallback = getFrontWindowFallbackRect()
+        // Try 5: mouse cursor position (absolute last resort)
+        let m = NSEvent.mouseLocation
+        let fallback = NSRect(x: m.x, y: m.y - 20, width: 0, height: 20)
         lastKnownCursorRect = fallback
         return fallback
     }
 
-    /// Try to get cursor position via the Accessibility API.
-    /// Works for Chrome and other apps where IMKTextInput.firstRect returns bad coordinates.
-    /// Returns nil if Accessibility permission is not granted or the query fails.
-    private func getAccessibilityCursorRect() -> NSRect? {
-        guard let frontApp = NSWorkspace.shared.frontmostApplication else { return nil }
-        let appElement = AXUIElementCreateApplication(frontApp.processIdentifier)
-
-        var focusedValue: AnyObject?
-        guard AXUIElementCopyAttributeValue(
-            appElement, kAXFocusedUIElementAttribute as CFString, &focusedValue
-        ) == .success else { return nil }
-
-        let focused = focusedValue as! AXUIElement
-
-        // Get selected text range
-        var rangeValue: AnyObject?
-        guard AXUIElementCopyAttributeValue(
-            focused, kAXSelectedTextRangeAttribute as CFString, &rangeValue
-        ) == .success else { return nil }
-
-        // Get bounds for the selected text range
-        var boundsValue: AnyObject?
-        guard AXUIElementCopyParameterizedAttributeValue(
-            focused, kAXBoundsForRangeParameterizedAttribute as CFString,
-            rangeValue!, &boundsValue
-        ) == .success else { return nil }
-
-        var cgRect = CGRect.zero
-        guard AXValueGetValue(boundsValue as! AXValue, .cgRect, &cgRect) else { return nil }
-
-        // Convert CG coordinates (top-left origin) to NS coordinates (bottom-left origin)
-        // Use the primary screen height for conversion (screen[0] has menu bar)
-        guard let primaryScreenHeight = NSScreen.screens.first?.frame.height else { return nil }
-        let nsY = primaryScreenHeight - cgRect.origin.y - cgRect.size.height
-        return NSRect(x: cgRect.origin.x, y: nsY, width: cgRect.size.width, height: cgRect.size.height)
-    }
-
-    /// Validate that a cursor rect is within the frontmost app's window.
-    /// Catches Chrome-like apps that return garbage/uninitialized values.
+    /// Lightweight validation — no IPC calls, just arithmetic checks.
+    /// Catches Chrome/Electron garbage values (subnormal doubles, zero-height rects).
     private func isValidCursorRect(_ rect: NSRect) -> Bool {
         // Reject garbage/uninitialized memory (subnormal doubles like 1.6e-314)
         if rect.origin.x.isSubnormal || rect.origin.y.isSubnormal ||
@@ -455,72 +413,7 @@ class LekhoInputController: IMKInputController {
         if rect.size.height < 1 { return false }
 
         // Must be within some screen
-        let onScreen = NSScreen.screens.contains { $0.frame.contains(rect.origin) }
-        if !onScreen { return false }
-
-        // Check if the point is within the frontmost app's windows
-        guard let frontApp = NSWorkspace.shared.frontmostApplication else { return true }
-        let pid = frontApp.processIdentifier
-        guard let windowList = CGWindowListCopyWindowInfo(
-            [.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID
-        ) as? [[String: Any]] else { return true }
-
-        guard let screenHeight = NSScreen.main?.frame.height else { return true }
-
-        for window in windowList {
-            guard let ownerPID = window[kCGWindowOwnerPID as String] as? Int32,
-                  ownerPID == pid,
-                  let bounds = window[kCGWindowBounds as String] as? [String: CGFloat],
-                  let w = bounds["Width"], w > 50,
-                  let h = bounds["Height"], h > 50 else { continue }
-
-            // Convert CG coords (top-left origin) to NS coords (bottom-left origin)
-            let winRect = NSRect(
-                x: bounds["X"] ?? 0,
-                y: screenHeight - (bounds["Y"] ?? 0) - h,
-                width: w,
-                height: h
-            )
-            if winRect.contains(rect.origin) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    /// Fallback: position near the top of the frontmost window
-    private func getFrontWindowFallbackRect() -> NSRect {
-        guard let frontApp = NSWorkspace.shared.frontmostApplication else {
-            let m = NSEvent.mouseLocation
-            return NSRect(x: m.x, y: m.y - 20, width: 0, height: 20)
-        }
-        let pid = frontApp.processIdentifier
-        guard let windowList = CGWindowListCopyWindowInfo(
-            [.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID
-        ) as? [[String: Any]],
-              let screenHeight = NSScreen.main?.frame.height else {
-            let m = NSEvent.mouseLocation
-            return NSRect(x: m.x, y: m.y - 20, width: 0, height: 20)
-        }
-
-        for window in windowList {
-            guard let ownerPID = window[kCGWindowOwnerPID as String] as? Int32,
-                  ownerPID == pid,
-                  let layer = window[kCGWindowLayer as String] as? Int, layer == 0,
-                  let bounds = window[kCGWindowBounds as String] as? [String: CGFloat],
-                  let w = bounds["Width"], w > 100,
-                  let h = bounds["Height"], h > 100 else { continue }
-
-            // Place near the top of the window, slightly indented (where text input usually is)
-            let x = (bounds["X"] ?? 0) + 60
-            let cgY = (bounds["Y"] ?? 0) + 80  // Below title bar + toolbar area
-            let y = screenHeight - cgY
-            return NSRect(x: x, y: y, width: 0, height: 20)
-        }
-
-        let m = NSEvent.mouseLocation
-        return NSRect(x: m.x, y: m.y - 20, width: 0, height: 20)
+        return NSScreen.screens.contains { $0.frame.contains(rect.origin) }
     }
 
     // MARK: - Candidate window

@@ -8,7 +8,7 @@ let kConnectionName = "com.lekho.inputmethod.Lekho_Connection"
 var server: IMKServer!
 
 // Build identifier — check Console.app for "Lekho" to verify which build is running
-let lekhoBuildId = "build-20260316a"
+let lekhoBuildId = "build-20260329a"
 NSLog("Lekho: starting %@", lekhoBuildId)
 
 // Register menu bar icon as template BEFORE IMKServer loads it —

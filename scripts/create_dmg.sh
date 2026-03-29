@@ -5,7 +5,7 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP_BUNDLE="$PROJECT_ROOT/build/Lekho.app"
 PKG_DIR="$PROJECT_ROOT/build/pkg_staging"
 DMG_DIR="$PROJECT_ROOT/build/dmg_staging"
-VERSION="0.2.1"
+VERSION="0.2.2"
 PKG_OUTPUT="$PROJECT_ROOT/build/Lekho.pkg"
 DMG_OUTPUT="$PROJECT_ROOT/build/Lekho-${VERSION}.dmg"
 VOLUME_NAME="Lekho"
@@ -85,7 +85,13 @@ ln -sf "$INSTALL_DIR/Lekho.app" "/Applications/Lekho.app"
 rm -f "/Applications/AvroBangla.app" 2>/dev/null || true
 rm -rf "/Applications/AvroBangla.app" 2>/dev/null || true
 
-# Launch the input method as the real user
+# Kill any auto-relaunched old instance (macOS may relaunch the IME
+# between preinstall kill and postinstall copy — the old binary runs
+# from cache, showing the wrong version)
+killall Lekho 2>/dev/null || true
+sleep 0.5
+
+# Launch the NEW binary as the real user
 su "$REAL_USER" -c "open '$INSTALL_DIR/Lekho.app'" 2>/dev/null || true
 
 exit 0
@@ -98,7 +104,7 @@ pkgbuild \
     --nopayload \
     --scripts "$PKG_DIR/scripts" \
     --identifier "com.lekho.inputmethod.Lekho" \
-    --version "0.2.1" \
+    --version "0.2.2" \
     "$PKG_DIR/Lekho-component.pkg"
 
 # Create a distribution XML for a nicer installer UI
@@ -131,7 +137,7 @@ and log back in for the keyboard to appear.
         <pkg-ref id="com.lekho.inputmethod.Lekho"/>
     </choice>
     <pkg-ref id="com.lekho.inputmethod.Lekho"
-             version="0.2.1"
+             version="0.2.2"
              onConclusion="none">Lekho-component.pkg</pkg-ref>
 </installer-gui-script>
 DISTXML
