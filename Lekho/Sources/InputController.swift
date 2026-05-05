@@ -159,10 +159,20 @@ class LekhoInputController: IMKInputController {
             return false
         }
 
-        // Handle Tab - commit and pass through
+        // Handle Tab - navigate candidates (Shift+Tab cycles backward)
         if keyCode == 48 {
             if riti_context_ongoing_input_session(engineCtx) {
-                commitTopCandidate(client: client)
+                let length = currentSuggestion != nil ? riti_suggestion_get_length(currentSuggestion) : 0
+                if length > 0 {
+                    if modifiers.contains(.shift) {
+                        selectedIndex = selectedIndex == 0 ? UInt(length - 1) : selectedIndex - 1
+                    } else {
+                        selectedIndex = (selectedIndex + 1) % UInt(length)
+                    }
+                    updateMarkedText(client: client)
+                    candidatePanel?.selectCandidate(at: Int(selectedIndex))
+                }
+                return true
             }
             return false
         }
