@@ -4,9 +4,9 @@
   <img src="./docs/preview.png" alt="Lekho Keyboard Banner" width="100%">
 </div>
 
-**The only working native Avro Phonetic keyboard for modern macOS and Apple Silicon.**
+**The only Avro Phonetic keyboard built natively for Apple Silicon Macs.**
 
-Lekho brings Avro Phonetic-style Bangla (Bengali) typing back to the Mac — natively on Apple Silicon (M1, M2, M3, M4, M5). If you used Avro Keyboard on Windows, iAvro on older macOS, or OpenBangla Keyboard on Linux, Lekho is your Mac equivalent.
+Lekho brings Avro Phonetic-style Bangla (Bengali) typing to Apple Silicon Macs natively (M1, M2, M3, M4, M5) — no Rosetta required. If you used Avro Keyboard on Windows, iAvro on macOS, or OpenBangla Keyboard on Linux, Lekho is your native Apple Silicon alternative.
 
 **[Download](https://github.com/ARahim3/Lekho/releases/latest)** | **[Website](https://arahim3.github.io/Lekho/)**
 
@@ -14,14 +14,14 @@ Lekho brings Avro Phonetic-style Bangla (Bengali) typing back to the Mac — nat
 
 ## Why Lekho?
 
-Every existing Bangla keyboard option for macOS is either abandoned or broken on Apple Silicon:
+The existing Bangla keyboard options for macOS each have limitations on Apple Silicon:
 
-- **Avro Keyboard** (OmicronLab) — discontinued for Mac
-- **iAvro** — broken on modern macOS, not Apple Silicon native
+- **Avro Keyboard** (OmicronLab) — Windows-focused, no native macOS build
+- **iAvro** — Intel-only macOS build that runs on Apple Silicon through Rosetta. [Apple has announced](https://support.apple.com/en-us/102527) Rosetta support is being wound down — fully available in macOS 27, then limited to legacy games starting in macOS 28. macOS already shows a deprecation warning on Intel-only input methods.
 - **OpenBangla Keyboard** — Linux only (Qt-based), no macOS port
 - **macOS built-in Bengali** — Apple's own layout, not Avro phonetic
 
-Lekho fills this gap. It's a native macOS input method that works in every app — Safari, Chrome, VS Code, Notes, Spotlight, everywhere.
+Lekho is built natively for Apple Silicon — no Rosetta required, future-proof as macOS evolves. It works in every app — Safari, Chrome, VS Code, Notes, Spotlight, everywhere.
 
 ## Features
 
