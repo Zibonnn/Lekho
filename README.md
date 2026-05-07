@@ -28,6 +28,7 @@ Lekho is built natively for Apple Silicon — no Rosetta required, future-proof 
 - **Avro Phonetic typing** — type `ami banglay gan gai` → আমি বাংলায় গান গাই
 - **150k word dictionary** with smart suggestions and autocorrect
 - **Smart emoji suggestions** — type কান্না and get 😢, বাংলাদেশ and get 🇧🇩, right in the candidate panel
+- **Optional phonetic-only mode** — disable suggestions, autocorrect, and emoji entirely if you want pure character-by-character control
 - **Native Apple Silicon** — ~2.7 MB, instant startup, zero CPU when idle
 - **Works on all Apple Silicon Macs** — MacBook Air, MacBook Pro, iMac, Mac Mini, Mac Studio (M1/M2/M3/M4/M5)
 - **Works everywhere** — built with Apple's InputMethodKit framework

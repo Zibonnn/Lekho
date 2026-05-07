@@ -64,6 +64,80 @@ class WelcomeTabView: NSView {
         layoutTab.label = "Avro Layout"
         layoutTab.view = LayoutWebView()
         tabView.addTabViewItem(layoutTab)
+
+        let settingsTab = NSTabViewItem(identifier: "settings")
+        settingsTab.label = "Settings"
+        settingsTab.view = SettingsView()
+        tabView.addTabViewItem(settingsTab)
+    }
+}
+
+// MARK: - Settings Tab
+
+class SettingsView: NSView {
+    private let phoneticOnlyCheckbox = NSButton(checkboxWithTitle: "Phonetic-only mode", target: nil, action: nil)
+
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    private func setupUI() {
+        let stack = NSStackView()
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 8
+        stack.edgeInsets = NSEdgeInsets(top: 24, left: 28, bottom: 24, right: 28)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: topAnchor),
+            stack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
+        ])
+
+        // Section heading
+        let heading = NSTextField(labelWithString: "Typing")
+        heading.font = NSFont.systemFont(ofSize: 15, weight: .semibold)
+        heading.textColor = NSColor.controlAccentColor
+        stack.addArrangedSubview(heading)
+
+        stack.setCustomSpacing(12, after: heading)
+
+        // Checkbox
+        phoneticOnlyCheckbox.font = NSFont.systemFont(ofSize: 13, weight: .medium)
+        phoneticOnlyCheckbox.target = self
+        phoneticOnlyCheckbox.action = #selector(phoneticOnlyToggled(_:))
+        phoneticOnlyCheckbox.state = UserDefaults.standard.bool(forKey: LekhoInputController.phoneticOnlyModeKey) ? .on : .off
+        stack.addArrangedSubview(phoneticOnlyCheckbox)
+
+        // Description
+        let desc = NSTextField(wrappingLabelWithString:
+            "Convert typing directly to Bengali phonetics, with no suggestions popup, autocorrect, or emoji. " +
+            "Useful if you want full control over every word — but you'll lose dictionary fixes for irregular spellings.")
+        desc.font = NSFont.systemFont(ofSize: 12)
+        desc.textColor = NSColor.secondaryLabelColor
+        desc.preferredMaxLayoutWidth = 720
+        stack.addArrangedSubview(desc)
+
+        stack.setCustomSpacing(20, after: desc)
+
+        // Tip
+        let tipLabel = NSTextField(wrappingLabelWithString:
+            "Tip: Changes apply immediately to new typing. Any word you were composing when you toggled this will be discarded — just retype it.")
+        tipLabel.font = NSFont.systemFont(ofSize: 11)
+        tipLabel.textColor = NSColor.tertiaryLabelColor
+        tipLabel.preferredMaxLayoutWidth = 720
+        stack.addArrangedSubview(tipLabel)
+    }
+
+    @objc private func phoneticOnlyToggled(_ sender: NSButton) {
+        let enabled = sender.state == .on
+        UserDefaults.standard.set(enabled, forKey: LekhoInputController.phoneticOnlyModeKey)
+        NotificationCenter.default.post(name: .lekhoPhoneticOnlyModeChanged, object: nil)
     }
 }
 
