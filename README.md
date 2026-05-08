@@ -39,7 +39,16 @@ Lekho is built natively for Apple Silicon — no Rosetta required, future-proof 
 
 1. Download the latest `.dmg` from [Releases](https://github.com/ARahim3/Lekho/releases/latest)
 2. Open the DMG and double-click **Install Lekho.pkg**
-   > **macOS may block the installer** since Lekho isn't signed with an Apple Developer ID yet. If that happens: go to **System Settings → Privacy & Security**, scroll to the bottom, and click **"Allow Anyway"** next to the Lekho message. Then try opening the .pkg again.
+
+   > **macOS may block the installer** since Lekho isn't signed with an Apple Developer ID yet. If you see *"Install Lekho.pkg" Not Opened*, follow these two steps:
+   >
+   > **a.** Click **Done** on the warning dialog (do *not* click "Move to Trash"). The "Open Anyway" option won't appear in System Settings until you do.
+   >
+   > <img src="./docs/install_blocked_dialog.png" alt="macOS install blocked dialog — click Done" width="500">
+   > 
+   > **b.** Open **System Settings → Privacy & Security**, scroll to the **Security** section, and click **Open Anyway** next to *"Install Lekho.pkg" was blocked*. Then double-click the .pkg again.
+   >
+   > <img src="./docs/install_allow_anyway.png" alt="Privacy & Security pane — click Open Anyway" width="500">
 3. Go to **System Settings → Keyboard → Input Sources → Edit**, click **+**, find **Lekho**, and add it
    > If Lekho doesn't appear in the list, log out of your Mac and log back in — macOS sometimes needs this to discover new input methods on first install.
 5. Use Globe key or Ctrl+Space to switch to Bangla
