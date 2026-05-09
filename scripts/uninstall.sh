@@ -4,6 +4,8 @@ set -euo pipefail
 APP_NAME="Lekho"
 INSTALL_DIR="$HOME/Library/Input Methods"
 USER_DATA_DIR="$HOME/Library/Application Support/Lekho"
+PREFS_FILE="$HOME/Library/Preferences/com.lekho.inputmethod.Lekho.plist"
+SAVED_STATE_DIR="$HOME/Library/Saved Application State/com.lekho.inputmethod.Lekho.savedState"
 
 echo "=== Uninstalling $APP_NAME ==="
 
@@ -26,12 +28,19 @@ rm -f "/Applications/AvroBangla.app" 2>/dev/null || true
 rm -f "/Applications/$APP_NAME.app" 2>/dev/null || true
 
 # Ask about user data
-if [ -d "$USER_DATA_DIR" ]; then
+if [ -d "$USER_DATA_DIR" ] || [ -f "$PREFS_FILE" ] || [ -d "$SAVED_STATE_DIR" ]; then
     echo ""
-    read -p "Remove user data ($USER_DATA_DIR)? [y/N] " -n 1 -r
+    echo "User data found:"
+    [ -d "$USER_DATA_DIR" ]   && echo "  - $USER_DATA_DIR (learned word selections)"
+    [ -f "$PREFS_FILE" ]      && echo "  - $PREFS_FILE (settings)"
+    [ -d "$SAVED_STATE_DIR" ] && echo "  - $SAVED_STATE_DIR (welcome window state)"
+    echo ""
+    read -p "Remove all user data? [y/N] " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -rf "$USER_DATA_DIR"
+        rm -rf "$USER_DATA_DIR"   2>/dev/null || true
+        rm -f  "$PREFS_FILE"      2>/dev/null || true
+        rm -rf "$SAVED_STATE_DIR" 2>/dev/null || true
         echo ">>> User data removed."
     else
         echo ">>> User data preserved."
