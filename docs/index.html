@@ -138,6 +138,14 @@
                         "@type": "Answer",
                         "text": "Install Lekho, then go to System Settings → Keyboard → Input Sources → click + → search 'Lekho' → Add. Switch to it with the Globe key or Ctrl+Space. Then just type in English and it converts to Bengali phonetically — for example, type 'ami' to get 'আমি'."
                     }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Can I install Lekho with Homebrew?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Run 'brew install --cask arahim3/lekho/lekho' to install — the fully-qualified form auto-taps the personal tap, so it works in a single command. Update with 'brew upgrade --cask lekho' and uninstall with 'brew uninstall --cask lekho'. Both Homebrew and the GitHub Releases DMG are supported install paths."
+                    }
                 }
             ]
         }
@@ -1943,15 +1951,20 @@
                     <div class="install-step animate-on-scroll">
                         <div class="step-number">1</div>
                         <div class="step-content">
-                            <h3>Download &amp; install</h3>
+                            <h3>Install</h3>
                             <p>
-                                Grab the latest <code>.dmg</code> from
+                                <strong>Have Homebrew?</strong> One command:
+                                <br>
+                                <code style="display:inline-block; margin-top:0.4rem">brew install --cask arahim3/lekho/lekho</code>
+                            </p>
+                            <p>
+                                Otherwise, grab the latest <code>.dmg</code> from
                                 <a
                                     href="https://github.com/ARahim3/Lekho/releases/latest"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     >GitHub Releases</a
-                                >. Open it and double-click
+                                >, open it, and double-click
                                 <strong>Install Lekho.pkg</strong> — the
                                 installer handles everything. If macOS blocks
                                 the installer, go to <strong>System Settings →

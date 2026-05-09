@@ -15,6 +15,7 @@ PLAN.md
 # Draft folders (kept locally)
 github_repo_final/
 github_repo_plan/
+homebrew-tap/
 
 # Xcode (if ever opened)
 *.xcodeproj
