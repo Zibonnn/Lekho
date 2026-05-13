@@ -11,7 +11,7 @@
         <link rel="alternate" hreflang="x-default" href="https://arahim3.github.io/Lekho/" />
         <meta
             name="description"
-            content="Lekho — macOS-এর জন্য ফ্রি অভ্র ফোনেটিক বাংলা কিবোর্ড। Apple Silicon (M1–M5)-এর জন্য নেটিভভাবে তৈরি, সব অ্যাপে কাজ করে। আধুনিক Apple Silicon ম্যাকে iAvro-র নেটিভ বিকল্প।"
+            content="Lekho — ম্যাকের জন্য ফ্রি অভ্র ফোনেটিক বাংলা কিবোর্ড। Apple Silicon (M1–M5) ম্যাকের জন্য নেটিভভাবে তৈরি, সব অ্যাপেই চলে। আধুনিক ম্যাকে iAvro-র নেটিভ বিকল্প।"
         />
         <!-- SEO: Bengali-heavy keywords with English crossover terms -->
         <meta
@@ -89,10 +89,10 @@
             "mainEntity": [
                 {
                     "@type": "Question",
-                    "name": "এটা কি Avro Keyboard for Mac-এর সাথে একই?",
+                    "name": "এটা কি 'Avro Keyboard for Mac'-এর মতোই?",
                     "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "Lekho তার আধ্যাত্মিক উত্তরসূরি — Windows-এ Avro Keyboard আর macOS-এ iAvro যে অভ্র ফোনেটিক ট্রান্সলিটারেশনের নিয়ম চালু করেছিল, সেই একই নিয়ম Lekho ব্যবহার করে। iAvro একটা Intel-only বিল্ড যা Rosetta দিয়ে Apple Silicon-এ চলে, কিন্তু Apple ঘোষণা করেছে Rosetta সাপোর্ট ধীরে ধীরে বন্ধ হবে। Lekho নেটিভভাবে Apple Silicon ম্যাকের (M1, M2, M3, M4, M5) জন্য তৈরি — তাই macOS যত আপডেট হবে, Lekho সমান স্বাচ্ছন্দ্যে চলবে।"
+                        "text": "Lekho সেই একই ধারার উত্তরসূরি — Windows-এ Avro Keyboard আর macOS-এ iAvro যে অভ্র ফোনেটিক ট্রান্সলিটারেশনের নিয়মগুলো জনপ্রিয় করেছিল, Lekho ঠিক সেই নিয়মেই চলে। iAvro এখনো কাজ করে, কিন্তু এটা Intel-only বিল্ড — Apple Silicon-এ Rosetta দিয়ে চালাতে হয়, আর Apple ঘোষণা করেছে Rosetta সাপোর্ট ধীরে ধীরে বন্ধ হবে। Lekho তৈরিই হয়েছে Apple Silicon ম্যাকের (M1, M2, M3, M4, M5) জন্য, নেটিভভাবে — তাই macOS যত নতুন ভার্সনে যাবে, Lekho সাবলীলভাবেই চলতে থাকবে।"
                     }
                 },
                 {
@@ -297,13 +297,13 @@
                 align-items: center;
             }
             /* FIX: restructured to remove !important — split non-download and download into separate rules */
-            .nav-links a:not(.nav-download) {
+            .nav-links a:not(.nav-download):not(.nav-lang) {
                 color: var(--text-secondary);
                 text-decoration: none;
                 font-size: 0.88rem;
                 transition: color 0.2s;
             }
-            .nav-links a:not(.nav-download):hover {
+            .nav-links a:not(.nav-download):not(.nav-lang):hover {
                 color: var(--text-primary);
             }
             .nav-download {
@@ -313,7 +313,6 @@
                 border-radius: 8px;
                 font-weight: 500;
                 text-decoration: none;
-                /* FIX: transition: all → specific properties */
                 transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
                 box-shadow: 0 2px 8px rgba(192, 57, 43, 0.2);
             }
@@ -321,6 +320,31 @@
                 background: var(--vermillion-deep);
                 transform: translateY(-1px);
                 box-shadow: 0 4px 16px rgba(192, 57, 43, 0.25);
+            }
+            /* Language toggle — outlined pill with globe icon */
+            .nav-lang {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.4rem 0.85rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                background: transparent;
+                text-decoration: none;
+                transition: border-color 0.2s, color 0.2s, background 0.2s;
+            }
+            .nav-lang:hover {
+                border-color: var(--vermillion);
+                color: var(--vermillion);
+                background: var(--vermillion-soft);
+            }
+            .nav-lang-icon {
+                width: 14px;
+                height: 14px;
+                opacity: 0.85;
+                flex-shrink: 0;
             }
 
             /* FIX: hamburger button — hidden on desktop, shown on mobile */
@@ -1151,7 +1175,15 @@
                 <a href="https://github.com/ARahim3/Lekho" target="_blank" rel="noopener noreferrer"
                     >GitHub</a
                 >
-                <a href="../" hreflang="en" style="font-size: 0.82rem; opacity: 0.75;">EN</a>
+                <a href="../" hreflang="en" class="nav-lang" aria-label="Switch to English">
+                    <svg class="nav-lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M3 12h18"/>
+                        <path d="M12 3a14 14 0 0 1 0 18"/>
+                        <path d="M12 3a14 14 0 0 0 0 18"/>
+                    </svg>
+                    <span>English</span>
+                </a>
                 <a
                     href="https://github.com/ARahim3/Lekho/releases/latest"
                     class="nav-download"
@@ -1762,21 +1794,20 @@
                 <div class="hero-content">
                     <div class="hero-badge">
                         <span class="hero-badge-dot"></span>
-                        v0.2 — সব অ্যাপে কাজ করে, আরও পরিশীলিত
+                        v0.2 — এখন সব অ্যাপেই চলে, আরও মসৃণ
                     </div>
                     <h1>
-                        ম্যাকে আবার ফিরে এলো<br /><span class="highlight"
-                            >অভ্র ফোনেটিক।</span
+                        অভ্র ফোনেটিকে বাংলা লেখা,<br /><span class="highlight"
+                            >আবার ম্যাকে।</span
                         >
                     </h1>
                     <p class="hero-sub">
-                        Apple Silicon-এর জন্য নেটিভ বাংলা ফোনেটিক কিবোর্ড।
-                        M-সিরিজ ম্যাকে <strong>iAvro</strong>-স্টাইল টাইপিং —
-                        Rosetta লাগে না।
+                        M-সিরিজ ম্যাকে নেটিভভাবে বাংলা ফোনেটিক টাইপিং —
+                        <strong>iAvro</strong>-তে যেভাবে অভ্যস্ত, ঠিক সেভাবেই, Rosetta ছাড়াই।
                         <strong style="color: var(--text-primary)"
                             >Lekho</strong
                         >
-                        চিরকাল ফ্রি ও ওপেন সোর্স।
+                        সম্পূর্ণ ফ্রি, ওপেন সোর্স — চিরকালের জন্য।
                     </p>
                     <div class="hero-actions">
                         <a
@@ -1863,7 +1894,7 @@
                 <div class="animate-on-scroll">
                     <div class="section-label">কেন Lekho</div>
                     <h2 class="section-title">
-                        iAvro যা পারত — সবকিছু, নেটিভ Apple Silicon-এ।
+                        iAvro-তে যা যা পেতেন — সবই আছে, এবার নেটিভ Apple Silicon-এ।
                     </h2>
                 </div>
                 <div class="feature-grid">
@@ -1871,66 +1902,66 @@
                         <div class="feature-icon">⌨️</div>
                         <h3>পূর্ণাঙ্গ অভ্র ফোনেটিক</h3>
                         <p>
-                            চেনা সেই ট্রান্সলিটারেশন — লিখুন
+                            অভ্রের যে নিয়মে আপনি অভ্যস্ত — সেটাই। লিখুন
                             <code class="mono" style="font-size: 0.78rem"
                                 >ami banglay gan gai</code
-                            >, পান
+                            >, পাবেন
                             <span class="bangla" lang="bn" style="font-weight: 500"
                                 >আমি বাংলায় গান গাই</span
-                            >। যুক্তবর্ণ, রেফ, য-ফলা — সব ঠিকঠাক হ্যান্ডল করে।
+                            >। যুক্তবর্ণ, রেফ, য-ফলা — সব ঠিকঠাক সামলায়।
                         </p>
                     </div>
                     <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">📖</div>
                         <h3>১৫০ হাজার শব্দ + ইমোজি</h3>
                         <p>
-                            বিশাল বাংলা অভিধান থেকে স্মার্ট সাজেশন, সঙ্গে অটোকারেক্ট।
-                            প্লাস কনটেক্সচুয়াল ইমোজি —
-                            <span class="bangla" lang="bn">কান্না</span>-এর জন্য 😢,
-                            <span class="bangla" lang="bn">বাংলাদেশ</span>-এর জন্য 🇧🇩।
-                            আপনার পছন্দের সাজেশন মনে রাখে।
-                            সাজেশন বন্ধ রাখতে চাইলে Settings-এ গিয়ে
-                            ফোনেটিক-অনলি মোড চালু করুন।
+                            ১৫০ হাজার শব্দের বাংলা ডিকশনারি, স্মার্ট সাজেশন, অটোকারেক্ট — সব আছে।
+                            সঙ্গে contextual ইমোজি:
+                            <span class="bangla" lang="bn">কান্না</span> লিখলে 😢,
+                            <span class="bangla" lang="bn">বাংলাদেশ</span> লিখলে 🇧🇩।
+                            আপনি যে সাজেশন বেশি বেছে নেন, সেটাই মনে রাখে।
+                            সাজেশন একেবারে না চাইলে Settings থেকে
+                            ফোনেটিক-অনলি মোড অন করে নিন।
                         </p>
                     </div>
                     <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">🪶</div>
-                        <h3>~২.৭ MB। শূন্য বোঝা।</h3>
+                        <h3>~২.৭ MB। একদম হালকা।</h3>
                         <p>
                             নেটিভ Apple Silicon বাইনারি। Electron নেই, Java নেই,
-                            কোনো ব্যাকগ্রাউন্ড ডিমন নেই। তাৎক্ষণিক চালু হয়,
-                            আইডল অবস্থায় শূন্য CPU ব্যবহার। একটা সঠিক ইনপুট মেথড।
+                            ব্যাকগ্রাউন্ডে কোনো সার্ভিস ঘুরছে না। সঙ্গে সঙ্গে চালু হয়,
+                            আইডল অবস্থায় CPU-র উপর কোনো চাপ নেই। ইনপুট মেথড এমনই হওয়া উচিত।
                         </p>
                     </div>
                     <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">🍎</div>
                         <h3>macOS 13+ নেটিভ</h3>
                         <p>
-                            InputMethodKit দিয়ে তৈরি — Apple নিজেও যে ফ্রেমওয়ার্ক
-                            ব্যবহার করে। Safari, Chrome, VS Code, TextEdit, Spotlight —
-                            সব জায়গায় কাজ করে।
+                            InputMethodKit দিয়ে তৈরি — যে ফ্রেমওয়ার্ক Apple নিজেও ব্যবহার করে।
+                            Safari, Chrome, VS Code, TextEdit, Spotlight —
+                            সব অ্যাপেই চলে।
                         </p>
                     </div>
                     <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">🔒</div>
-                        <h3>কোনো ডেটা সংগ্রহ নয়</h3>
+                        <h3>কোনো ডেটা সংগ্রহ করি না</h3>
                         <p>
-                            সবকিছু চলে আপনার ম্যাকেই, লোকালি। ইন্টারনেট লাগে না,
-                            কোনো টেলিমেট্রি নেই, কীস্ট্রোক কখনো বাইরে যায় না।
+                            সব কিছু চলে আপনার ম্যাকেই — কোনো ক্লাউড নেই, ইন্টারনেট
+                            লাগে না, কোনো ট্র্যাকিং নেই। আপনি যা টাইপ করেন তা কখনো
+                            আপনার ম্যাকের বাইরে যায় না।
                         </p>
                     </div>
                     <div class="feature-card animate-on-scroll">
                         <div class="feature-icon">⚡</div>
-                        <h3>OpenBangla দিয়ে চালিত</h3>
+                        <h3>চালিকা শক্তি: OpenBangla</h3>
                         <p>
-                            তৈরি
+                            ভেতরে আছে
                             <a
                                 href="https://github.com/OpenBangla/riti"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 >riti</a
-                            >-র উপরে — Linux-এর OpenBangla Keyboard-এর সেই প্রমাণিত
-                            ইঞ্জিন, এখন ম্যাকে।
+                            > ইঞ্জিন — Linux-এ OpenBangla Keyboard যেটা দিয়ে চলে, সেটাই, এবার ম্যাকেও।
                         </p>
                     </div>
                 </div>
@@ -1941,7 +1972,7 @@
             <section class="install" id="install">
                 <div class="animate-on-scroll">
                     <div class="section-label">শুরু করুন</div>
-                    <h2 class="section-title">২ মিনিটেই রেডি।</h2>
+                    <h2 class="section-title">২ মিনিটে চালু হয়ে যাবেন।</h2>
                 </div>
                 <div class="install-steps">
                     <div class="install-step animate-on-scroll">
@@ -1954,19 +1985,19 @@
                                 <code style="display:inline-block; margin-top:0.4rem">brew install --cask arahim3/lekho/lekho</code>
                             </p>
                             <p>
-                                নয়তো
+                                অথবা
                                 <a
                                     href="https://github.com/ARahim3/Lekho/releases/latest"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     >GitHub Releases</a
-                                > থেকে সবশেষ <code>.dmg</code> ফাইলটি নামিয়ে নিন,
+                                > থেকে লেটেস্ট <code>.dmg</code> ফাইলটি নামিয়ে নিন;
                                 ওপেন করে <strong>Install Lekho.pkg</strong>-এ ডাবল-ক্লিক করুন —
-                                বাকি সব ইনস্টলার সামলাবে।
-                                macOS যদি ইনস্টলার ব্লক করে,
+                                বাকিটা ইনস্টলার সামলাবে।
+                                macOS ইনস্টলার ব্লক করলে
                                 <strong>System Settings → Privacy &amp; Security</strong>-এ
-                                গিয়ে নিচে স্ক্রল করে Lekho-এর পাশের
-                                <strong>"Allow Anyway"</strong> বাটনে ক্লিক করুন।
+                                যান, নিচে স্ক্রল করে Lekho-এর পাশের
+                                <strong>"Allow Anyway"</strong> ক্লিক করুন।
                             </p>
                         </div>
                     </div>
@@ -1978,10 +2009,10 @@
                                 <strong
                                     >System Settings → Keyboard → Input Sources
                                     → Edit</strong
-                                > খুলে <strong>+</strong> বাটনে ক্লিক করুন,
-                                <strong>English → Lekho</strong> খুঁজে যোগ করুন।
-                                লিস্টে Lekho না দেখালে একবার log out করে আবার log in করুন —
-                                নতুন ইনপুট মেথড আবিষ্কার করতে কখনো কখনো macOS-এর এটা দরকার হয়।
+                                > খুলুন, <strong>+</strong> বাটনে ক্লিক করুন,
+                                <strong>English → Lekho</strong> খুঁজে যোগ করে নিন।
+                                লিস্টে Lekho দেখা না গেলে একবার লগ আউট করে আবার লগ ইন করুন —
+                                নতুন ইনপুট মেথডকে সিস্টেমে চিনিয়ে নিতে macOS-এর মাঝে মাঝে এইটুকু সময় লাগে।
                             </p>
                         </div>
                     </div>
@@ -1989,28 +2020,28 @@
                         <div class="step-number">৩</div>
                         <div class="step-content">
                             <h3>
-                                টাইপ করুন
+                                এবার লিখুন
                                 <span class="bangla" lang="bn" style="font-weight: 600"
-                                    >বাংলা</span
+                                    >বাংলায়</span
                                 >
                             </h3>
                             <p>
                                 মেনু বার থেকে অথবা কিবোর্ড শর্টকাট দিয়ে Lekho-তে সুইচ করুন।
-                                English-এ টাইপ করুন, বাংলায় পাবেন।
+                                English-এ টাইপ করুন, বাংলা পাবেন।
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="install-note animate-on-scroll">
-                    <strong>v0.2:</strong> সব অ্যাপে কাজ করে — Chrome, Notes, Mail, Obsidian, যেটাই বলুন।
+                    <strong>v0.2:</strong> এখন সব অ্যাপেই চলে — Chrome, Notes, Mail, Obsidian, যেটাই বলুন।
                     কোনো বাগ পেলেন?
                     <a
                         href="https://github.com/ARahim3/Lekho/issues"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >ইস্যু খুলুন</a
+                        >GitHub-এ ইস্যু খুলুন</a
                     >
-                    — প্রতিটা রিপোর্টই কাজে লাগে।
+                    — প্রতিটা রিপোর্টই সাহায্য করে।
                 </div>
             </section>
 
@@ -2018,7 +2049,7 @@
 
             <section class="tech" id="tech">
                 <div class="animate-on-scroll">
-                    <div class="section-label">ভেতরের গল্প</div>
+                    <div class="section-label">ভেতরের কথা</div>
                     <h2 class="section-title">টেকনিক্যাল ডিটেলস</h2>
                 </div>
                 <div class="tech-grid">
@@ -2026,30 +2057,30 @@
                         <div class="tech-card-label">ইঞ্জিন</div>
                         <div class="tech-card-value">OpenBangla riti</div>
                         <div class="tech-card-detail">
-                            বাংলা ইনপুট মেথড লাইব্রেরি (Rust)।
-                            Swift + InputMethodKit দিয়ে macOS-এ ব্রিজ করা।
+                            বাংলা ইনপুট মেথডের লাইব্রেরি (Rust-এ লেখা),
+                            Swift + InputMethodKit দিয়ে macOS-এর সাথে যুক্ত।
                         </div>
                     </div>
                     <div class="tech-card animate-on-scroll">
                         <div class="tech-card-label">আর্কিটেকচার</div>
                         <div class="tech-card-value">Apple Silicon</div>
                         <div class="tech-card-detail">
-                            নেটিভ arm64 বাইনারি। M1/M2/M3/M4/M5 ম্যাকের জন্য তৈরি।
+                            নেটিভ arm64 বাইনারি — M1/M2/M3/M4/M5 ম্যাকের জন্য তৈরি।
                         </div>
                     </div>
                     <div class="tech-card animate-on-scroll">
                         <div class="tech-card-label">দরকার</div>
                         <div class="tech-card-value">macOS 13+</div>
                         <div class="tech-card-detail">
-                            Ventura, Sonoma, Sequoia ও পরের ভার্সন।
+                            Ventura, Sonoma, Sequoia এবং পরবর্তী ভার্সনগুলোতে।
                         </div>
                     </div>
                     <div class="tech-card animate-on-scroll">
-                        <div class="tech-card-label">মূল্য</div>
+                        <div class="tech-card-label">দাম</div>
                         <div class="tech-card-value">ফ্রি</div>
                         <div class="tech-card-detail">
-                            কোনো বিজ্ঞাপন নেই, সাবস্ক্রিপশন নেই, সাইন-আপ নেই।
-                            ডাউনলোড করুন আর লিখুন।
+                            বিজ্ঞাপন নেই, সাবস্ক্রিপশন নেই, সাইন-আপের ঝামেলা নেই।
+                            ডাউনলোড করুন, লেখা শুরু করে দিন।
                         </div>
                     </div>
                 </div>
@@ -2063,11 +2094,11 @@
                             lang="bn"
                             style="color: var(--vermillion)"
                             >লেখো</span
-                        >, আপনার ম্যাকে।
+                        >, আপনার ম্যাকেই।
                     </h2>
                     <p>
-                        Lekho ডাউনলোড করুন এবং টেস্ট করতে সাহায্য করুন।
-                        প্রতিটা বাগ রিপোর্ট সবার জন্য এটাকে আরও ভালো করে।
+                        Lekho ডাউনলোড করুন, ব্যবহার করে দেখুন।
+                        আপনার প্রতিটি বাগ রিপোর্ট Lekho-কে সবার জন্য আরও ভালো করে তোলে।
                     </p>
                     <div class="cta-actions">
                         <a
@@ -2114,16 +2145,16 @@
                     <h2 class="section-title">সাধারণ প্রশ্ন</h2>
                 </div>
                 <details class="animate-on-scroll">
-                    <summary>এটা কি Avro Keyboard for Mac-এর সাথে একই?</summary>
+                    <summary>এটা কি 'Avro Keyboard for Mac'-এর মতোই?</summary>
                     <p>
-                        Lekho তার আধ্যাত্মিক উত্তরসূরি — Windows-এ Avro Keyboard আর macOS-এ iAvro
-                        যে অভ্র ফোনেটিক ট্রান্সলিটারেশনের নিয়ম চালু করেছিল, সেই একই নিয়ম Lekho
-                        ব্যবহার করে। iAvro একটা Intel-only বিল্ড যা Rosetta দিয়ে Apple Silicon-এ চলে,
-                        কিন্তু
+                        Lekho সেই একই ধারার উত্তরসূরি — Windows-এ Avro Keyboard আর macOS-এ iAvro
+                        যে অভ্র ফোনেটিক ট্রান্সলিটারেশনের নিয়মগুলো জনপ্রিয় করেছিল, Lekho ঠিক
+                        সেই নিয়মেই চলে। iAvro এখনো কাজ করে, কিন্তু এটা Intel-only বিল্ড —
+                        Apple Silicon-এ Rosetta দিয়ে চালাতে হয়, আর
                         <a href="https://support.apple.com/en-us/102527" target="_blank" rel="noopener noreferrer">Apple ঘোষণা করেছে</a>
-                        Rosetta সাপোর্ট ধীরে ধীরে বন্ধ হবে। Lekho নেটিভভাবে Apple Silicon ম্যাকের
-                        (M1, M2, M3, M4, M5) জন্য তৈরি — তাই macOS যত আপডেট হবে, Lekho সমান
-                        স্বাচ্ছন্দ্যে চলবে।
+                        Rosetta সাপোর্ট ধীরে ধীরে বন্ধ হবে। Lekho তৈরিই হয়েছে Apple Silicon ম্যাকের
+                        (M1, M2, M3, M4, M5) জন্য, নেটিভভাবে — তাই macOS যত নতুন ভার্সনে যাবে,
+                        Lekho সাবলীলভাবেই চলতে থাকবে।
                     </p>
                 </details>
                 <details class="animate-on-scroll">
@@ -2195,15 +2226,15 @@
         </main>
         <footer>
             <p>
-                মেইনটেইন করেন
+                দেখাশোনা করছেন
                 <a href="https://github.com/ARahim3" target="_blank" rel="noopener noreferrer"
                     >Abdur Rahim</a
                 >
-                · চালিত
+                · চলে
                 <a href="https://github.com/OpenBangla/riti" target="_blank" rel="noopener noreferrer"
                     >OpenBangla-র riti ইঞ্জিনে</a
                 >
-                · OmicronLab-এর সাথে যুক্ত নয়
+                · OmicronLab-এর সাথে আনুষ্ঠানিক সম্পর্ক নেই
             </p>
             <div class="footer-links">
                 <a href="https://github.com/ARahim3/Lekho" target="_blank" rel="noopener noreferrer"

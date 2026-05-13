@@ -294,13 +294,13 @@
                 align-items: center;
             }
             /* FIX: restructured to remove !important — split non-download and download into separate rules */
-            .nav-links a:not(.nav-download) {
+            .nav-links a:not(.nav-download):not(.nav-lang) {
                 color: var(--text-secondary);
                 text-decoration: none;
                 font-size: 0.88rem;
                 transition: color 0.2s;
             }
-            .nav-links a:not(.nav-download):hover {
+            .nav-links a:not(.nav-download):not(.nav-lang):hover {
                 color: var(--text-primary);
             }
             .nav-download {
@@ -318,6 +318,31 @@
                 background: var(--vermillion-deep);
                 transform: translateY(-1px);
                 box-shadow: 0 4px 16px rgba(192, 57, 43, 0.25);
+            }
+            /* Language toggle — outlined pill with globe icon, clearly reads as a button */
+            .nav-lang {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.4rem 0.85rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                background: transparent;
+                text-decoration: none;
+                transition: border-color 0.2s, color 0.2s, background 0.2s;
+            }
+            .nav-lang:hover {
+                border-color: var(--vermillion);
+                color: var(--vermillion);
+                background: var(--vermillion-soft);
+            }
+            .nav-lang-icon {
+                width: 14px;
+                height: 14px;
+                opacity: 0.85;
+                flex-shrink: 0;
             }
 
             /* FIX: hamburger button — hidden on desktop, shown on mobile */
@@ -1150,7 +1175,15 @@
                 <a href="https://github.com/ARahim3/Lekho" target="_blank" rel="noopener noreferrer"
                     >GitHub</a
                 >
-                <a href="bn/" hreflang="bn" lang="bn" class="bangla" style="font-size: 0.88rem; opacity: 0.75;">বাংলা</a>
+                <a href="bn/" hreflang="bn" lang="bn" class="nav-lang" aria-label="Switch to Bengali">
+                    <svg class="nav-lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M3 12h18"/>
+                        <path d="M12 3a14 14 0 0 1 0 18"/>
+                        <path d="M12 3a14 14 0 0 0 0 18"/>
+                    </svg>
+                    <span class="bangla">বাংলা</span>
+                </a>
                 <a
                     href="https://github.com/ARahim3/Lekho/releases/latest"
                     class="nav-download"
