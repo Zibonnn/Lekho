@@ -394,13 +394,27 @@ class LekhoInputController: IMKInputController {
         // Set as marked (underlined) text
         let attrs: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .markedClauseSegment: 0,
             .font: NSFont.systemFont(ofSize: NSFont.systemFontSize)
         ]
         let attrStr = NSAttributedString(string: preEditText, attributes: attrs)
 
+        // Workaround for Chromium-based browsers (Chrome, Edge, Brave, Electron)
+        // They often miscalculate the cursor offset for complex scripts if we pass UTF-16 length.
+        var cursorLocation = preEditText.utf16.count
+        if let bundleId = client.bundleIdentifier()?.lowercased() {
+            if bundleId.contains("chrome") || bundleId.contains("chromium") || 
+               bundleId.contains("brave") || bundleId.contains("edgemac") || 
+               bundleId.contains("vivaldi") || bundleId.contains("arc") || 
+               bundleId.contains("electron") || bundleId.contains("cursor") {
+                // Use grapheme cluster count instead of UTF-16 code unit count
+                cursorLocation = preEditText.count
+            }
+        }
+
         client.setMarkedText(
             attrStr,
-            selectionRange: NSRange(location: preEditText.utf16.count, length: 0),
+            selectionRange: NSRange(location: cursorLocation, length: 0),
             replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
         )
     }
