@@ -391,7 +391,11 @@ class LekhoInputController: IMKInputController {
         let preEditText = String(cString: preEditPtr)
         riti_string_free(preEditPtr)
 
-        // Set as marked (underlined) text
+        // Set as marked (underlined) text.
+        //
+        // NSMarkedClauseSegment (value 0) groups the entire composition into a
+        // single segment.  Chromium requires this to identify the string as one
+        // coherent composition unit.
         let attrs: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .markedClauseSegment: 0,
@@ -399,22 +403,35 @@ class LekhoInputController: IMKInputController {
         ]
         let attrStr = NSAttributedString(string: preEditText, attributes: attrs)
 
-        // Workaround for Chromium-based browsers (Chrome, Edge, Brave, Electron)
-        // They often miscalculate the cursor offset for complex scripts if we pass UTF-16 length.
-        var cursorLocation = preEditText.utf16.count
-        if let bundleId = client.bundleIdentifier()?.lowercased() {
-            if bundleId.contains("chrome") || bundleId.contains("chromium") || 
-               bundleId.contains("brave") || bundleId.contains("edgemac") || 
-               bundleId.contains("vivaldi") || bundleId.contains("arc") || 
-               bundleId.contains("electron") || bundleId.contains("cursor") {
-                // Use grapheme cluster count instead of UTF-16 code unit count
-                cursorLocation = preEditText.count
-            }
+        // Chromium-based browsers (Chrome, Edge, Brave, Electron, Arc …) have
+        // a known bug: they ignore `selectionRange.location` when length == 0
+        // (a collapsed/cursor-only selection) and silently place the cursor at
+        // position 0 — making it appear to the LEFT of the composition.
+        //
+        // Workaround: pass a non-zero-length selection that spans the whole
+        // composition ({location:0, length:N}).  Chromium then positions the
+        // cursor at the END of the selection (position N), which is correct.
+        //
+        // For all other clients, a collapsed NSRange({N, 0}) is the standard
+        // "cursor at end" representation.
+        //
+        // selectionRange values are always UTF-16 code-unit offsets (NSRange
+        // convention).  utf16.count is the correct end-of-string position for
+        // any NSRange consumer, including multi-unit Bangla grapheme clusters
+        // (e.g. "কা" = U+0995+U+09BE = 2 UTF-16 units, 1 grapheme).
+        let utf16Length = preEditText.utf16.count
+        let selectionRange: NSRange
+        if isChromiumClient(client) {
+            // Entire composition as selection → cursor at end
+            selectionRange = NSRange(location: 0, length: utf16Length)
+        } else {
+            // Collapsed cursor at end
+            selectionRange = NSRange(location: utf16Length, length: 0)
         }
 
         client.setMarkedText(
             attrStr,
-            selectionRange: NSRange(location: cursorLocation, length: 0),
+            selectionRange: selectionRange,
             replacementRange: NSRange(location: NSNotFound, length: NSNotFound)
         )
     }
@@ -462,11 +479,58 @@ class LekhoInputController: IMKInputController {
         hideCandidates()
     }
 
+    // MARK: - Chromium detection
+
+    /// Returns true when the current client is a Chromium-based app (Chrome,
+    /// Edge, Brave, Electron, Arc, Cursor IDE, etc.).  Used to apply
+    /// Chromium-specific workarounds for IME cursor-positioning bugs.
+    private func isChromiumClient(_ client: any IMKTextInput) -> Bool {
+        guard let bundleId = client.bundleIdentifier()?.lowercased() else { return false }
+        let chromiumIds = ["chrome", "chromium", "brave", "edgemac", "vivaldi",
+                           "arc", "electron", "cursor"]
+        return chromiumIds.contains(where: { bundleId.contains($0) })
+    }
+
     // MARK: - Cursor position for candidate window
 
     /// Get cursor screen rect from the client. Called AFTER updateMarkedText
     /// so that markedRange() returns a valid range.
     private func getCursorRect(client: any IMKTextInput) -> NSRect {
+        // For Chromium clients: after setMarkedText with {0, N} selection the
+        // Chromium cursor is at position N (end of composition).  selectedRange()
+        // therefore reports the document cursor at the end — the most reliable
+        // source for the panel position.  Try it first for Chromium.
+        if isChromiumClient(client) {
+            let sel = client.selectedRange()
+            if sel.location != NSNotFound {
+                let rect = client.firstRect(forCharacterRange: sel, actualRange: nil)
+                if isValidCursorRect(rect) {
+                    lastKnownCursorRect = rect
+                    return rect
+                }
+            }
+            // Chromium fallback: rect of the last character of the marked range
+            let marked = client.markedRange()
+            if marked.location != NSNotFound && marked.length > 0 {
+                let lastCharRange = NSRange(location: marked.location + marked.length - 1, length: 1)
+                let rect = client.firstRect(forCharacterRange: lastCharRange, actualRange: nil)
+                if isValidCursorRect(rect) {
+                    // Shift x to the right edge of that character so the panel
+                    // appears at the cursor, not the left edge of the last glyph.
+                    let adjusted = NSRect(x: rect.maxX, y: rect.origin.y,
+                                         width: 0, height: rect.height)
+                    lastKnownCursorRect = adjusted
+                    return adjusted
+                }
+                // Last resort for Chromium: use start of marked range
+                let startRect = client.firstRect(forCharacterRange: marked, actualRange: nil)
+                if isValidCursorRect(startRect) {
+                    lastKnownCursorRect = startRect
+                    return startRect
+                }
+            }
+        }
+
         // Try 1: firstRect with markedRange (most reliable after setMarkedText)
         let marked = client.markedRange()
 
