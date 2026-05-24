@@ -208,8 +208,9 @@ class CandidateView: NSView {
                 width: bounds.width - padding * 2 - 32,
                 height: rowHeight - 4
             )
+            let candidateFont = NSFont(name: "July", size: 16) ?? NSFont.systemFont(ofSize: 16)
             let textAttrs: [NSAttributedString.Key: Any] = [
-                .font: NSFont.systemFont(ofSize: 16),
+                .font: candidateFont,
                 .foregroundColor: isSelected
                     ? NSColor.alternateSelectedControlTextColor
                     : NSColor.labelColor

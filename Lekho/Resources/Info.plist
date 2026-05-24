@@ -38,5 +38,7 @@
     <string>iconTemplate</string>
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
+    <key>ATSApplicationFontsPath</key>
+    <string>fonts</string>
 </dict>
 </plist>

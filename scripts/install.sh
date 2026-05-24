@@ -30,15 +30,6 @@ rm -f "/Applications/AvroBangla.app" 2>/dev/null || true
 echo ">>> Copying $APP_NAME.app to $INSTALL_DIR/..."
 cp -R "$APP_BUNDLE" "$INSTALL_DIR/"
 
-# Install Fonts
-FONT_DIR="$PROJECT_ROOT/fonts"
-USER_FONT_DIR="$HOME/Library/Fonts"
-
-if [ -d "$FONT_DIR" ]; then
-    echo ">>> Installing bundled Bangla fonts..."
-    find "$FONT_DIR" -type f \( -iname "*.ttf" -o -iname "*.otf" \) -exec cp {} "$USER_FONT_DIR/" \;
-fi
-
 # Clear extended attributes
 xattr -cr "$INSTALL_DIR/$APP_NAME.app" 2>/dev/null || true
 

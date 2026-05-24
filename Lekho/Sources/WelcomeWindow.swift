@@ -533,7 +533,7 @@ class LayoutWebView: NSView {
             webView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        webView.loadHTMLString(layoutHTML(), baseURL: nil)
+        webView.loadHTMLString(layoutHTML(), baseURL: Bundle.main.resourceURL)
     }
 
     private func layoutHTML() -> String {
@@ -543,6 +543,18 @@ class LayoutWebView: NSView {
             <head>
             <meta charset="utf-8">
             <style>
+                @font-face {
+                    font-family: 'July';
+                    src: url('fonts/July/July-Regular.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+                @font-face {
+                    font-family: 'July';
+                    src: url('fonts/July/July-Bold.ttf') format('truetype');
+                    font-weight: bold;
+                    font-style: normal;
+                }
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body {
                     font-family: "July", -apple-system, "Helvetica Neue", sans-serif;

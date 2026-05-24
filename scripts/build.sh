@@ -67,6 +67,11 @@ cp "$SWIFT_DIR/Resources/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/AppIcon.i
 # Copy data files
 cp "$PROJECT_ROOT/data/"*.json "$APP_BUNDLE/Contents/Resources/data/"
 
+# Copy fonts to bundle
+if [ -d "$PROJECT_ROOT/fonts" ]; then
+    cp -R "$PROJECT_ROOT/fonts" "$APP_BUNDLE/Contents/Resources/fonts"
+fi
+
 # Create PkgInfo
 echo -n "APPL????" > "$APP_BUNDLE/Contents/PkgInfo"
 
