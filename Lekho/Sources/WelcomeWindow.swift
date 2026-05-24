@@ -189,6 +189,7 @@ class GettingStartedView: NSView {
         let titleFont = NSFont.systemFont(ofSize: 22, weight: .bold)
         let headingFont = NSFont.systemFont(ofSize: 15, weight: .semibold)
         let bodyFont = NSFont.systemFont(ofSize: 13, weight: .regular)
+        let banglaFont = NSFont(name: "July", size: 14) ?? bodyFont
         let bodyColor = NSColor.labelColor
         let secondaryColor = NSColor.secondaryLabelColor
         let accentColor = NSColor.controlAccentColor
@@ -278,7 +279,7 @@ class GettingStartedView: NSView {
                 NSAttributedString(
                     string: "  \u{2014}  \(desc)",
                     attributes: [
-                        .font: bodyFont, .foregroundColor: secondaryColor,
+                        .font: (desc.contains("বাংলা") ? banglaFont : bodyFont), .foregroundColor: secondaryColor,
                     ]))
         }
 
@@ -544,7 +545,7 @@ class LayoutWebView: NSView {
             <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body {
-                    font-family: -apple-system, "Helvetica Neue", sans-serif;
+                    font-family: "July", -apple-system, "Helvetica Neue", sans-serif;
                     padding: 12px 16px;
                     background: transparent;
                     color-scheme: light dark;
